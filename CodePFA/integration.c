@@ -12,10 +12,7 @@ bool setQuadFormula(QuadFormula* qf, char* name)
 	//our code, only updates the name for now
 
 	if (strcmp(name, "left")!=0 && strcmp(name, "right")!=0 && strcmp(name,"middle")!=0 && strcmp(name, "trapezes")!=0 && strcmp(name, "simpson")!=0 && strcmp("gauss2",name)!=0 && strcmp(name,"gauss3")!=0){
-
 		return false;
-
-
 	}
 
 	int current = 0;
@@ -28,9 +25,61 @@ bool setQuadFormula(QuadFormula* qf, char* name)
 
 	if (strcmp(name, "left")==0){
 		qf->n = 0;
-		qf->wk = malloc(sizeof(double));
-		qf->xk = malloc(sizeof(double));
-		qf
+		
+		*(qf->wk) = 1;
+		*(qf->xk) = 0;
+	}
+	if (strcmp(name, "right")==0){
+		qf->n = 0;
+		*(qf->wk) = 1;
+		*(qf->xk) = 1;
+	}
+	if (strcmp(name, "middle")==0){
+		qf->n = 0;
+		*(qf->wk) = 1;
+		*(qf->xk) = 1/2.;
+	}
+	if (strcmp(name, "trapezes")==0){
+		
+		qf->n = 1;
+		*(qf->wk +0) = 1/2.;
+		*(qf->wk +1) = 1/2.;
+		*(qf->xk +0) = 0.;
+		*(qf->xk +1) = 1.;
+	}
+
+	if (strcmp(name, "simpson")==0){
+		qf->n = 2;
+		*(qf->wk +0) = 1/6.;
+		*(qf->wk +1) = 2/3.;
+		*(qf->wk +2) = 1/6.;
+		*(qf->xk +0) = 0.;
+		*(qf->xk +1) = 1/2.;
+		*(qf->xk +2) = 1.;
+	}
+
+	if (strcmp(name, "gauss2")==0){
+		qf->n = 1;
+		qf->wk = malloc(sizeof(double)*2);
+		qf->xk = malloc(sizeof(double)*2);
+		*(qf->wk +0) = 1/6.;
+		*(qf->wk +1) = 2/3.;
+		double aaa = 2*sqrt(3.);
+		double aa = 1/aaa;
+		*(qf->xk +0) = 1/2. - aa;
+		*(qf->xk +1) = 1/2. + aa;
+	}
+	if (strcmp(name, "gauss3")==0){
+		qf->n = 2;
+		qf->wk = malloc(sizeof(double)*3);
+		qf->xk = malloc(sizeof(double)*3);
+		*(qf->wk +0) = 5/18.;
+		*(qf->wk +1) = 4/9.;
+		*(qf->wk +2) = 5/18.;
+		double aa = 1/(2*sqrt(3.));
+		*(qf->xk +0) = 1/2. * (1-sqrt(3/5.));
+		*(qf->xk +1) = 1/2.;
+		*(qf->xk +2) = 1/2. * (1+sqrt(3/5.));
 	}
 
 
@@ -58,41 +107,23 @@ double integrate(double (*f)(double), double a, double b, int N, QuadFormula* qf
 	float sum = 0;
 	float bemoinzasurenne = (b-a)/N;
 
-	if (strcmp(qf->name, "left")==0){
-		for (int i=0;i<N;i++){
-			sum+=f(a+i*bemoinzasurenne) *bemoinzasurenne;
+
+
+	for (int i=0;i<N;i++){
+
+		float inside_sum = 0;
+		float ai = a+i*bemoinzasurenne;
+		float bi = a+(i+1)*bemoinzasurenne;
+		for (int ii=0;ii<(qf->n +1);ii++){
+			
+			inside_sum += *((qf->wk) +ii) * (f(ai+ *(qf->xk+ii) *(bi-ai)  ));
 		}
-	}
-	if (strcmp(qf->name, "right")==0){
-		for (int i=1;i<N+1;i++){
-			sum+=f(a+(i)*bemoinzasurenne) * bemoinzasurenne;
-		}
-	}
-	if (strcmp(qf->name, "middle")==0){
-		for (int i=0;i<N;i++){
-			sum+= f( a+  i*bemoinzasurenne + (bemoinzasurenne   )/2 ) *bemoinzasurenne;
-		}
+		sum+=(bemoinzasurenne) * inside_sum;
 	}
 
-	if (strcmp(qf->name, "trapezes")){
-		for (int i=0;i<N;i++){
-			ai = a+i*bemoinzasurenne;
-			bi = a+(i+1)*bemoinzasurenne;
-
-		}
-	}
-	if (strcmp(qf->name, "simpson")){
-
-	}
-	if (strcmp(qf->name, "gauss2")){
-		
-	}
-	if (strcmp(qf->name, "gauss3")){
-
-	}
-	
 	return sum;
-	return 0.0;
+
+
 }
 
 double integrate_dx(double (*f)(double), double a, double b, double dx, QuadFormula* qf)
