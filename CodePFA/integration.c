@@ -26,6 +26,14 @@ bool setQuadFormula(QuadFormula* qf, char* name)
 
 	}
 
+	if (strcmp(name, "left")==0){
+		qf->n = 0;
+		qf->wk = malloc(sizeof(double));
+		qf->xk = malloc(sizeof(double));
+		qf
+	}
+
+
 	(*qf).name[current] = '\0';
 
 	return true;
@@ -66,7 +74,22 @@ double integrate(double (*f)(double), double a, double b, int N, QuadFormula* qf
 		}
 	}
 
-	if (strcmp(qf->name, ""))
+	if (strcmp(qf->name, "trapezes")){
+		for (int i=0;i<N;i++){
+			ai = a+i*bemoinzasurenne;
+			bi = a+(i+1)*bemoinzasurenne;
+
+		}
+	}
+	if (strcmp(qf->name, "simpson")){
+
+	}
+	if (strcmp(qf->name, "gauss2")){
+		
+	}
+	if (strcmp(qf->name, "gauss3")){
+
+	}
 	
 	return sum;
 	return 0.0;
