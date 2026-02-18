@@ -30,9 +30,10 @@ int main()
 	setQuadFormula(&qf, "simpson");
 	I2 = integrate(f, 0, 1, 3, &qf);
 	
-	
+
+
 	setQuadFormula(&qf, "gauss2");
-	I3 = integrate(f, 0, 1, 300, &qf);
+	I3 = integrate_dx(f, 0, 1, 1, &qf);
 	
 	printf("%f, %f, %f", I1, I2, I3);
 	return 0;
