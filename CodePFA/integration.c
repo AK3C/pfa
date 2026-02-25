@@ -9,6 +9,16 @@
 bool setQuadFormula(QuadFormula* qf, char* name)
 {
 
+	if (qf==NULL){
+		return false;
+	}
+	if (!qf->wk){
+
+		qf->wk = malloc(sizeof(double)*4);
+	}
+	if (!qf->xk){
+		qf->xk = malloc(sizeof(double)*4);
+	}
 	//our code, only updates the name for now
 
 	if (strcmp(name, "left")!=0 && strcmp(name, "right")!=0 && strcmp(name,"middle")!=0 && strcmp(name, "trapezes")!=0 && strcmp(name, "simpson")!=0 && strcmp("gauss2",name)!=0 && strcmp(name,"gauss3")!=0){

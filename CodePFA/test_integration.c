@@ -21,9 +21,7 @@ int main()
 	QuadFormula qf;
 	double I1, I2, I3;
 
-	qf.wk = malloc(sizeof(double)*4);
-	qf.xk = malloc(sizeof(double)*4);
-	
+
 	
 	setQuadFormula(&qf, "trapezes");
 	I1 = integrate(f, 0, 1, 3, &qf);

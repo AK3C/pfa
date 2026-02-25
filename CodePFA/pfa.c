@@ -6,6 +6,9 @@
 
 #include "pfa.h"
 
+#include "integration.h"
+
+
 /* Initialize the integration variables.
    Arguments :
    - quadrature : name of the quadrature formula that will be used. It can be "left", "right", 
@@ -16,7 +19,17 @@
 */
 bool init_integration(char* quadrature, double dt)
 { 
-  return true;
+	
+	if (dt<0){
+		return false;
+	}
+
+	bool a = setQuadFormula(&pfaQF, quadrature);
+	if (a){
+		pfa_dt = dt;
+	}
+	return a;
+
 }
 
 
@@ -30,7 +43,8 @@ double phi(double x)
 /* Cumulative distribution function of the normal distribution */
 double PHI(double x)
 {
-  return 0.0;
+	
+	return 1/2. + integrate_dx(&phi, 0, x, pfa_dt, &pfaQF);
 }
 
 /* =====================================
@@ -38,7 +52,17 @@ double PHI(double x)
 */
 double optionPrice(Option* option)
 {
-  return 0.0;
+	
+	double z0 = (log(option->K / option->S0)-(option->mu - (pow(option->sig, 2)/2.) * option->T ) )  /  ( option->sig * sqrt(option->T) ) ; 
+	
+	
+	if (option->type==0){
+		return option->S0 *exp(option->mu * option->T) * PHI(option->sig * sqrt(option->T) - z0) - option->K * PHI(-z0); 
+	}
+	 
+	return option->S0 *exp(option->mu * option->T) * PHI(option->sig * sqrt(option->T) - z0) + option->K * PHI(z0); 
+
+
 }
 
 
@@ -92,7 +116,5 @@ double clientCDF_S(InsuredClient* client, double x)
 {
   return 0.0;
 }
-
-
 
 
