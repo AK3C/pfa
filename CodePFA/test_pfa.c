@@ -15,7 +15,7 @@ int main()
 	option->mu = 0.05;
 	option->K = 100;
 	option->sig = 0.02;
-	init_integration("trapezes", 0.1);
+	init_integration("gauss3", 0.1);
 
 	double a = optionPrice(option);
 	printf("%lf\n", a);
