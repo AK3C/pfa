@@ -76,7 +76,8 @@ double optionPrice(Option* option)
 */
 double clientPDF_X(InsuredClient* client, double x)
 {
-  return 0.0;
+  double a = 1/(sqrt(client->s)) * phi((x-client->m)/sqrt(client->s));
+  return a;
 }
 
 
