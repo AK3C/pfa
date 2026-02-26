@@ -127,6 +127,8 @@ double integrate(double (*f)(double), double a, double b, int N, QuadFormula* qf
 		for (int ii=0;ii<(qf->n +1);ii++){
 			
 			inside_sum += *((qf->wk) +ii) * (f(ai+ *(qf->xk+ii) *(bi-ai)  ));
+			inside_sum+=0;
+			
 		}
 		sum+=(bemoinzasurenne) * inside_sum;
 	}
@@ -139,6 +141,11 @@ double integrate(double (*f)(double), double a, double b, int N, QuadFormula* qf
 double integrate_dx(double (*f)(double), double a, double b, double dx, QuadFormula* qf)
 {
 	int N = (int) round (abs((int)b-(int)a) /dx);
+	if (b<a){
+		return -integrate(f, b, a, N, qf);
+	}
+	
+	
   	return integrate(f, a, b, N, qf);
 }
 
