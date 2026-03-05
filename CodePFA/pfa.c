@@ -76,8 +76,15 @@ double optionPrice(Option* option)
 */
 double clientPDF_X(InsuredClient* client, double x)
 {
-  double a = 1/(sqrt(client->s)) * phi((x-client->m)/sqrt(client->s));
-  return a;
+  if (x <= 0)
+  {
+    return 0.0;
+  }
+  double res = (log(x) - client->m) / client->s;
+  res = phi(res);
+  res *= 1/(client->s * x);
+  return res;
+  
 }
 
 
@@ -86,7 +93,13 @@ double clientPDF_X(InsuredClient* client, double x)
 */
 double clientCDF_X(InsuredClient* client, double x)
 {
-  return 0.0;
+  if (x <= 0)
+  {
+    return 0.0;
+  }
+  double res = (log(x) - client->m) / client->s;
+  res = PHI(res);
+  return res;
 }
 
 
@@ -94,9 +107,25 @@ double clientCDF_X(InsuredClient* client, double x)
    X1 and X2 are the reimbursements of the two claims from the client (assuming there are 
    two claims).
 */
+double global_x;
+InsuredClient *global_client;
+double g(double t) {
+    if (t <= 0 || t >= global_x) {
+        return 0.0;
+    }
+    return clientPDF_X(global_client, t) * clientPDF_X(global_client, global_x - t);
+}
 double clientPDF_X1X2(InsuredClient* client, double x)
 {
-  return 0.0;
+  if (x <= 0)
+  {
+    return 0.0;
+  }
+  global_x = x;
+  global_client = client;
+  return integrate_dx(&g, 0, global_x, pfa_dt, &pfaQF);
+  
+
 }
 
 
@@ -104,9 +133,24 @@ double clientPDF_X1X2(InsuredClient* client, double x)
    X1 and X2 are the reimbursements of the two claims from the client (assuming there are 
    two claims).
 */
+InsuredClient *global_client2;
+double global_x2;
+#include <stdio.h>
+double auxi(double t)
+{
+  double a = clientPDF_X1X2(global_client2, t);
+  printf("%lf\n", a);
+  return a;
+}
 double clientCDF_X1X2(InsuredClient* client, double x)
 {
-  return 0.0;
+  if (x <= 0)
+  {
+    return 0.0;
+  }
+  global_client2 = client;
+  global_x2 = x;
+  return integrate_dx(&auxi, 0, x, pfa_dt, &pfaQF);
 }
 
 
