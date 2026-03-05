@@ -19,14 +19,14 @@ int main()
 	InsuredClient *client = malloc(sizeof(InsuredClient));
 	client->m = 1;
 	client->s = 1;
-	client->p = malloc(sizeof(int)*3);
+	client->p = malloc(sizeof(double)*3);
 	*(client->p) = 0.9;
 	*(client->p+1) = 0.05;
 	*(client->p+2) = 0.05;
 
 	init_integration("gauss3", 0.1);
 
-	double a = clientCDF_S(client, 1);
+	double a = clientCDF_X1X2(client, 1);
 	printf("%lf\n", a);
 	return 0;
 

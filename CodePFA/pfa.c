@@ -107,13 +107,14 @@ double clientCDF_X(InsuredClient* client, double x)
    X1 and X2 are the reimbursements of the two claims from the client (assuming there are 
    two claims).
 */
-double global_x;
+double global_sum;
 InsuredClient *global_client;
 double g(double t) {
-    if (t <= 0 || t >= global_x) {
+    if (t <= 0 || t >= global_sum) 
+    {
         return 0.0;
     }
-    return clientPDF_X(global_client, t) * clientPDF_X(global_client, global_x - t);
+    return clientPDF_X(global_client, t) * clientPDF_X(global_client, global_sum - t);
 }
 double clientPDF_X1X2(InsuredClient* client, double x)
 {
@@ -121,9 +122,9 @@ double clientPDF_X1X2(InsuredClient* client, double x)
   {
     return 0.0;
   }
-  global_x = x;
+  global_sum = x;
   global_client = client;
-  return integrate_dx(&g, 0, global_x, pfa_dt, &pfaQF);
+  return integrate_dx(&g, 0, global_sum, pfa_dt, &pfaQF);
   
 
 }
@@ -139,7 +140,7 @@ double global_x2;
 double auxi(double t)
 {
   double a = clientPDF_X1X2(global_client2, t);
-  printf("%lf\n", a);
+  printf("t=%lf pdf=%.12e\n", t, a);
   return a;
 }
 double clientCDF_X1X2(InsuredClient* client, double x)
