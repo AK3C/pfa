@@ -150,8 +150,9 @@ double clientCDF_X1X2(InsuredClient* client, double x)
   }
   global_client2 = client;
   global_x2 = x;
-  return integrate_dx(&auxi, 0, x, pfa_dt, &pfaQF);
+  return integrate_dx(&auxi, 0, global_x2, pfa_dt, &pfaQF);
 }
+
 
 
 
@@ -160,7 +161,15 @@ double clientCDF_X1X2(InsuredClient* client, double x)
 */
 double clientCDF_S(InsuredClient* client, double x)
 {
-  return 0.0;
+  if (x<0)
+  {
+    return 0.0;
+  }
+  else if (x == 0)
+  {
+    return *(client->p);
+  }
+  return *(client-> p) + *(client-> p + 1) * clientCDF_X(client,x) + *(client-> p + 2) * clientCDF_X1X2(client,x);
 }
 
 

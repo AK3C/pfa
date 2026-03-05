@@ -26,7 +26,7 @@ int main()
 
 	init_integration("gauss3", 0.1);
 
-	double a = clientCDF_X1X2(client, 1);
+	double a = clientCDF_S(client, 1);
 	printf("%lf\n", a);
 	return 0;
 
