@@ -8,7 +8,6 @@
 
 #include "integration.h"
 
-
 /* Initialize the integration variables.
    Arguments :
    - quadrature : name of the quadrature formula that will be used. It can be "left", "right", 
@@ -110,7 +109,7 @@ double clientCDF_X(InsuredClient* client, double x)
 double global_sum;
 InsuredClient *global_client;
 double g(double t) {
-    if (t <= 0 || t >= global_sum) 
+    if (t < 0 || t > global_sum) 
     {
         return 0.0;
     }
@@ -136,12 +135,9 @@ double clientPDF_X1X2(InsuredClient* client, double x)
 */
 InsuredClient *global_client2;
 double global_x2;
-#include <stdio.h>
 double auxi(double t)
 {
-  double a = clientPDF_X1X2(global_client2, t);
-  printf("t=%lf pdf=%.12e\n", t, a);
-  return a;
+  return clientPDF_X(global_client2, t) * clientCDF_X(global_client2, global_x2 - t);
 }
 double clientCDF_X1X2(InsuredClient* client, double x)
 {
